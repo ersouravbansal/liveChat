@@ -57,7 +57,7 @@
         });
         // const socket = io.connect('https://live-chat-gamma.vercel.app/');
         const socket = io();
-        socket.on('message', addMessage)
+        socket.on("message", addMessage);
         getMessages();
       });
 
@@ -78,6 +78,8 @@
       // https://live-chat-gamma.vercel.app/messages
       function sendMessage(message) {
         $.post("http://localhost:3000/messages", message);
+        $("#name").val("");
+        $("#message").val("");
       }
     </script>
   </body>
