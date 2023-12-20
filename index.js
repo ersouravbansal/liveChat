@@ -20,7 +20,7 @@ io.on('connection', (socket) => {
 
     // Handle creating a new chatroom
     socket.on('createRoom', (newRoomName) => {
-      // You can add logic to save the new room to the database if needed
+      // You can add logic to save the new room to the database if needed.
       console.log(`New chatroom created: ${newRoomName}`);
       
       // Broadcast the new room to all connected clients

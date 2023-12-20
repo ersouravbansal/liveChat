@@ -115,7 +115,7 @@
       }
 
       function createChatroom(newRoomName) {
-        // Emit an event to the server to create the new chatroom
+        // Emit an event to the server to create the new chatroom.
         socket.emit('createRoom', newRoomName);
       }
     });
