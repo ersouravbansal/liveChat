@@ -1,8 +1,5 @@
 {
-    "version": 2,
-    "name": "music-album",
-    "builds": [
-      { "src": "server.js", "use": "@vercel/node" }
-    ]
+    "version": 3,
+    "name": "chat app"
   }
   
