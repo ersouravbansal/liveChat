@@ -21,3 +21,9 @@
     padding: 10px;
     border-radius: 8px;
   }
+  .chatroom-block {
+    border: 1px solid #ccc;
+    padding: 5px;
+    margin: 5px;
+    cursor: pointer;
+  }

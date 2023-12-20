@@ -9,12 +9,9 @@
 <body>
   <div class="container chat-container bg-light bg-gradient">
     <div class="bg-light chat-box">
-      <h1 class="h5 mb-2">Chat</h1>
+      <h1 class="h5 mb-2">Select A ChatRoom</h1>
       <div class="mb-3">
-        <label for="chatroom" class="form-label">Select or Create a Chatroom:</label>
-        <select id="chatroom" class="form-select">
-          <option value="" selected disabled>Select or Create</option>
-        </select>
+        <div id="chatroomList" class="d-flex flex-wrap"></div>
       </div>
       <div class="mb-3">
         <input id="name" class="form-control" placeholder="Your Name" />
@@ -47,8 +44,8 @@
       fetchChatrooms();
 
       // Handle chatroom selection
-      $("#chatroom").change(function () {
-        const selectedChatroom = $(this).val();
+      $(document).on('click', '.chatroom-block', function() {
+        const selectedChatroom = $(this).data('chatroom');
         if (selectedChatroom) {
           // Join the selected chatroom
           socket.emit('join', selectedChatroom);
@@ -78,19 +75,24 @@
 
       // Listen for newRoom event
       socket.on("newRoom", function (newRoomName) {
-        // Add the new room to the dropdown
-        $("#chatroom").append(`<option value="${newRoomName}">${newRoomName}</option>`);
+        // Add the new room to the list
+        addChatroom(newRoomName);
       });
 
       function fetchChatrooms() {
         $.get("/chatrooms", function (data) {
-          const chatroomDropdown = $("#chatroom");
-          chatroomDropdown.empty();
-          chatroomDropdown.append('<option value="" selected disabled>Select or Create</option>');
           data.forEach((chatroom) => {
-            chatroomDropdown.append(`<option value="${chatroom}">${chatroom}</option>`);
+            addChatroom(chatroom);
           });
         });
+      }
+
+      function addChatroom(chatroom) {
+        $("#chatroomList").append(`
+          <div class="chatroom-block" data-chatroom="${chatroom}">
+            ${chatroom}
+          </div>
+        `);
       }
 
       function addMessage(message) {
@@ -115,7 +117,7 @@
       }
 
       function createChatroom(newRoomName) {
-        // Emit an event to the server to create the new chatroom.
+        // Emit an event to the server to create the new chatroom
         socket.emit('createRoom', newRoomName);
       }
     });
