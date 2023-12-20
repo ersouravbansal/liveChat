@@ -13,8 +13,6 @@
   </head>
   <body>
     <div class="container chat-container bg-light bg-gradient">
-      <div id="messages" class="chat-box"></div>
-      <br />
       <div class="bg-light chat-box">
         <h1 class="h5 mb-2">Chat</h1>
         <div class="mb-3">
@@ -33,6 +31,9 @@
           </div>
         </div>
       </div>
+      <br />
+      <div id="messages" class="chat-box"></div>
+
     </div>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
@@ -49,6 +50,19 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
       $(document).ready(function () {
+        // Initialize the agent at application startup.
+        const fpPromise = import("https://openfpcdn.io/fingerprintjs/v4").then(
+          (FingerprintJS) => FingerprintJS.load()
+        );
+
+        // Get the visitor identifier when you need it.
+        fpPromise
+          .then((fp) => fp.get())
+          .then((result) => {
+            // This is the visitor identifier:
+            const visitorId = result.visitorId;
+            console.log("device id:",visitorId);
+          });
         $("#send").click(function () {
           sendMessage({
             name: $("#name").val(),
@@ -62,7 +76,7 @@
       });
 
       function addMessage(message) {
-        $("#messages").append(`
+        $("#messages").prepend(`
         <div class="message">
           <strong>${message.name}:</strong> ${message.message}
         </div>
