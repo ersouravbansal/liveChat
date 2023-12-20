@@ -82,14 +82,14 @@
       }
 
       function getMessages() {
-        $.get("http://localhost:3000/messages", function (data) {
-        // $.get("/messages", function (data) {
+        // $.get("http://localhost:3000/messages", function (data) {
+        $.get("/messages", function (data) {
           data.forEach(addMessage);
         });
       }
       function sendMessage(message) {
-        $.post("http://localhost:3000/messages", message);
-        // $.post("/messages", message);
+        // $.post("http://localhost:3000/messages", message);
+        $.post("/messages", message);
         $("#name").val("");
         $("#message").val("");
       }
