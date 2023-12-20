@@ -1,8 +1,9 @@
+require('dotenv').config()
 let express = require('express');
 const socketio = require('socket.io');
 const mongoose = require('mongoose');
 const app = express();
-const port = 3000;
+const port = process.env.portNumber
 const server = app.listen(port, () => {
     console.log("server is running on port", server.address().port);
 });
@@ -10,7 +11,7 @@ const io = socketio(server)
 io.on('connection', (socket) => {
     console.log('New connection Socket IO')
 })
-const db_url = "mongodb+srv://ndtvlivechat:4Pcyva4dHHNCTxSI@chatapp.g12liiu.mongodb.net/messages?retryWrites=true&w=majority"
+const db_url = process.env.MongodbURI
 mongoose.connect(db_url, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log("db connection successful");
