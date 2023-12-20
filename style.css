@@ -27,3 +27,6 @@
     margin: 5px;
     cursor: pointer;
   }
+  .selected {
+    background-color: #a0c5e8; /* Change the background color to your preferred highlight color */
+  }

@@ -9,7 +9,7 @@
 <body>
   <div class="container chat-container bg-light bg-gradient">
     <div class="bg-light chat-box">
-      <h1 class="h5 mb-2">Select A ChatRoom</h1>
+      <h1 class="h5 mb-2">Chat</h1>
       <div class="mb-3">
         <div id="chatroomList" class="d-flex flex-wrap"></div>
       </div>
@@ -45,8 +45,14 @@
 
       // Handle chatroom selection
       $(document).on('click', '.chatroom-block', function() {
+        // Remove the 'selected' class from all chatroom blocks
+        $('.chatroom-block').removeClass('selected');
+
         const selectedChatroom = $(this).data('chatroom');
         if (selectedChatroom) {
+          // Add the 'selected' class to the clicked chatroom block
+          $(this).addClass('selected');
+
           // Join the selected chatroom
           socket.emit('join', selectedChatroom);
 
@@ -67,7 +73,7 @@
         sendMessage({
           name: $("#name").val(),
           message: $("#message").val(),
-          chatroom: $("#chatroom").val(),
+          chatroom: $(".chatroom-block.selected").data('chatroom'),
         });
       });
 
