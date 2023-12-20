@@ -33,7 +33,6 @@
       </div>
       <br />
       <div id="messages" class="chat-box"></div>
-
     </div>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
@@ -61,7 +60,7 @@
           .then((result) => {
             // This is the visitor identifier:
             const visitorId = result.visitorId;
-            console.log("device id:",visitorId);
+            console.log("device id:", visitorId);
           });
         $("#send").click(function () {
           sendMessage({
@@ -69,8 +68,8 @@
             message: $("#message").val(),
           });
         });
-        // const socket = io.connect('https://live-chat-gamma.vercel.app/');
-        const socket = io();
+        const socket = io.connect('https://live-chat-silk.vercel.app/');
+        // const socket = io();
         socket.on("message", addMessage);
         getMessages();
       });
@@ -84,14 +83,14 @@
       }
 
       function getMessages() {
-        $.get("http://localhost:3000/messages", function (data) {
+        //$.get("http://localhost:3000/messages", function (data) {
+        $.get("/messages", function (data) {
           data.forEach(addMessage);
         });
       }
-      //   http://localhost:3000/messages
-      // https://live-chat-gamma.vercel.app/messages
       function sendMessage(message) {
-        $.post("http://localhost:3000/messages", message);
+        //$.post("http://localhost:3000/messages", message);
+        $.post("/messages", message);
         $("#name").val("");
         $("#message").val("");
       }
