@@ -1,17 +1,34 @@
-require('dotenv').config()
-let express = require('express');
+require('dotenv').config();
+const express = require('express');
 const socketio = require('socket.io');
 const mongoose = require('mongoose');
 const app = express();
-const port = process.env.portNumber
+const port = process.env.portNumber;
 const server = app.listen(port, () => {
     console.log("server is running on port", server.address().port);
 });
-const io = socketio(server)
+const io = socketio(server);
+
 io.on('connection', (socket) => {
-    console.log('New connection Socket IO')
-})
-const db_url = process.env.MongodbURI
+    console.log('New connection Socket IO');
+
+    // Handle joining a chatroom
+    socket.on('join', (chatroom) => {
+      socket.join(chatroom);
+      console.log(`Socket ${socket.id} joined chatroom ${chatroom}`);
+    });
+
+    // Handle creating a new chatroom
+    socket.on('createRoom', (newRoomName) => {
+      // You can add logic to save the new room to the database if needed
+      console.log(`New chatroom created: ${newRoomName}`);
+      
+      // Broadcast the new room to all connected clients
+      io.emit('newRoom', newRoomName);
+    });
+});
+
+const db_url = process.env.MongodbURI;
 mongoose.connect(db_url, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log("db connection successful");
@@ -22,18 +39,20 @@ mongoose.connect(db_url, { useNewUrlParser: true, useUnifiedTopology: true })
 
 const MessageSchema = new mongoose.Schema({
     name: String,
-    message: String
+    message: String,
+    chatroom: String,
 });
+
 const Message = mongoose.model('Message', MessageSchema);
 
-let bodyParser = require('body-parser');
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static(__dirname));
 
-// get: will get all the messages from the database
-app.get('/messages', async (req, res) => {
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+app.get('/messages/:chatroom', async (req, res) => {
     try {
-        const messages = await Message.find({});
+        const messages = await Message.find({ chatroom: req.params.chatroom });
         res.send(messages);
     } catch (err) {
         console.error(err);
@@ -41,16 +60,24 @@ app.get('/messages', async (req, res) => {
     }
 });
 
-// post: will save new messages created by the user to the database
 app.post('/messages', async (req, res) => {
     try {
         let message = new Message(req.body);
         await message.save();
-        io.emit('message', req.body);
+        io.to(req.body.chatroom).emit('message', req.body);
         res.sendStatus(200);
     } catch (err) {
         console.error(err);
         res.sendStatus(500);
     }
 });
-app.use(express.static(__dirname));
+
+app.get('/chatrooms', async (req, res) => {
+    try {
+        const chatrooms = await Message.distinct('chatroom');
+        res.send(chatrooms);
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+    }
+});
