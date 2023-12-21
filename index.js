@@ -2,6 +2,7 @@ require('dotenv').config()
 let express = require('express');
 const socketio = require('socket.io');
 const mongoose = require('mongoose');
+const { loremIpsum } = require('lorem-ipsum');
 const app = express();
 const port = process.env.portNumber
 const server = app.listen(port, () => {
@@ -58,4 +59,51 @@ app.post('/messages', async (req, res) => {
         res.sendStatus(500);
     }
 });
+const Names = ['Aarav', 'Ishaan', 'Aanya', 'Sanya', 'Rohan', 'Aaradhya', 'Ananya', 'Aryan', 'Aishwarya', 'Rahul'];
+
+app.get('/initialize', async (req, res) => {
+    try {
+        const chatrooms = ['Politics', 'Cricket', 'Business'];
+
+        // Generate and save 10 unique Lorem Ipsum messages for each chatroom
+        for (const chatroom of chatrooms) {
+            for (let i = 1; i <= 10; i++) {
+                const username = generateName();
+                const messageContent = generateLoremIpsum();
+                const messageData = {
+                    name: username,
+                    message: messageContent,
+                    chatroom: chatroom,
+                };
+
+                const message = new Message(messageData);
+                await message.save();
+            }
+        }
+
+        res.sendStatus(200);
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+    }
+});
+
+// Function to generate a random Indian name
+function generateName() {
+    const randomIndex = Math.floor(Math.random() * Names.length);
+    return Names[randomIndex];
+}
+
+// Function to generate Lorem Ipsum text
+function generateLoremIpsum() {
+    return loremIpsum({
+        count: 1,                      // Number of words, sentences, or paragraphs to generate.
+        units: 'sentences',            // Generate words, sentences, or paragraphs.
+        sentenceLowerBound: 5,         // Minimum words per sentence.
+        sentenceUpperBound: 15,        // Maximum words per sentence.
+        paragraphLowerBound: 3,        // Minimum sentences per paragraph.
+        paragraphUpperBound: 7,        // Maximum sentences per paragraph.
+        format: 'plain',               // Plain text or html
+    });
+}
 app.use(express.static(__dirname));
