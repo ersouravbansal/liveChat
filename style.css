@@ -1,5 +1,5 @@
 .chat-container {
-    max-width: 600px;
+    max-width: 800px;
     margin: auto;
   }
 
@@ -20,4 +20,13 @@
     border: 1px solid #ddd;
     padding: 10px;
     border-radius: 8px;
+  }
+  .chatroom-block {
+    border: 1px solid #ccc;
+    padding: 5px;
+    margin: 5px;
+    cursor: pointer;
+  }
+  .selected {
+    background-color: #a0c5e8; /* Change the background color to your preferred highlight color */
   }
