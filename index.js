@@ -29,6 +29,7 @@ mongoose.connect(db_url, { useNewUrlParser: true, useUnifiedTopology: true })
         { timestamps: true }
       );
       MessageSchema.set('timestamps', true);
+      const Message = mongoose.model('Message', MessageSchema);
 
 let bodyParser = require('body-parser');
 app.use(bodyParser.json());
