@@ -20,11 +20,15 @@ mongoose.connect(db_url, { useNewUrlParser: true, useUnifiedTopology: true })
         console.log("db connection failed", err);
     });
 
-const MessageSchema = new mongoose.Schema({
-    name: String,
-    message: String
-});
-const Message = mongoose.model('Message', MessageSchema);
+    const MessageSchema = new mongoose.Schema(
+        {
+          name: String,
+          message: String,
+          chatroom: String,
+        },
+        { timestamps: true }
+      );
+      MessageSchema.set('timestamps', true);
 
 let bodyParser = require('body-parser');
 app.use(bodyParser.json());
