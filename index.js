@@ -26,6 +26,7 @@ mongoose.connect(db_url, { useNewUrlParser: true, useUnifiedTopology: true })
           name: String,
           message: String,
           chatroom: String,
+          userId: String,
         },
         { timestamps: true }
       );

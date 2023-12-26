@@ -50,6 +50,7 @@
     <script>
       $(document).ready(function () {
         // Initialize the agent at application startup.
+        let visitorId;
         const fpPromise = import("https://openfpcdn.io/fingerprintjs/v4").then(
           (FingerprintJS) => FingerprintJS.load()
         );
@@ -59,13 +60,14 @@
           .then((fp) => fp.get())
           .then((result) => {
             // This is the visitor identifier:
-            const visitorId = result.visitorId;
+            visitorId = result.visitorId;
             console.log("device id:", visitorId);
           });
         $("#send").click(function () {
           sendMessage({
             name: $("#name").val(),
             message: $("#message").val(),
+            userId: visitorId,
           });
         });
         const socket = io();
